@@ -1,45 +1,29 @@
-import React, { useEffect, useState } from "react";
-import Coin from "./Product";
-import Loading from "./Loading";
-import axios from "axios";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const Home = () => {
-  const [coins, setCoins] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchAllCoins = async () => {
-      try {
-        const { data } = await axios.get(
-          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=inr&per_page=20"
-        );
+  const handlerAdd = () => {
+    //to access action.type
+    dispatch({
+      type: "increment",
+    });
+  };
+  const handlerMinus = () => {
+    //to access action.type
+    dispatch({
+      type: "decrement",
+    });
+  };
 
-        console.log(data);
-        setCoins(data);
-        setLoading(false);
-      } catch (error) {
-        alert("error");
-        setLoading(false);
-      }
-    };
-    fetchAllCoins();
-  }, []);
+  const { count } = useSelector((state) => state.first);
 
   return (
     <div className="home">
-      {loading ? (
-        <Loading />
-      ) : (
-        coins.map((i) => (
-          <Coin
-            name={i.name}
-            symbol={i.symbol}
-            imageSrc={i.image}
-            price={i.current_price}
-            key={i.id}
-          />
-        ))
-      )}
+      <button onClick={handlerMinus}>-</button>
+      <p>{count}</p>
+      <button onClick={handlerAdd}>+</button>
     </div>
   );
 };
